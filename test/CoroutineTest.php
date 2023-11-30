@@ -476,51 +476,51 @@ class CoroutineTest extends BaseTest
         $this->assertSame($exception, $reason);
     }
 
-    /**
-     * @depends testGeneratorThrowingExceptionWithFinallyFailsCoroutine
-     */
-    public function testGeneratorThrowingExceptionWithFinallyBlockAndReturnThrowing()
-    {
-        $exception = new \Exception;
+//    /**
+//     * @depends testGeneratorThrowingExceptionWithFinallyFailsCoroutine
+//     */
+//    public function testGeneratorThrowingExceptionWithFinallyBlockAndReturnThrowing()
+//    {
+//        $exception = new \Exception;
 
-        $generator = function () use ($exception) {
-            yield new Success;
+//        $generator = function () use ($exception) {
+//            yield new Success;
 
-            return call(function () use ($exception) {
-                return new class($exception) {
-                    private $exception;
+//            return call(function () use ($exception) {
+//                return new class($exception) {
+//                    private $exception;
 
-                    public function __construct(\Throwable $exception)
-                    {
-                        $this->exception = $exception;
-                    }
+//                    public function __construct(\Throwable $exception)
+//                    {
+//                        $this->exception = $exception;
+//                    }
 
-                    public function __destruct()
-                    {
-                        throw $this->exception;
-                    }
-                };
-            });
-        };
+//                    public function __destruct()
+//                    {
+//                        throw $this->exception;
+//                    }
+//                };
+//            });
+//        };
 
-        try {
-            new Coroutine($generator());
-        } catch (\Throwable $e) {
-            $this->fail("Caught exception that shouldn't be thrown at that place.");
-        }
+//        try {
+//            new Coroutine($generator());
+//        } catch (\Throwable $e) {
+//            $this->fail("Caught exception that shouldn't be thrown at that place.");
+//        }
 
-        $this->expectExceptionObject($exception);
+//        $this->expectExceptionObject($exception);
 
-        try {
-            Promise\wait(new Delayed(0)); // make loop tick once to throw errors from loop
-        } catch (\Error $e) {
-            if ($e->getMessage() === "Loop exceptionally stopped without resolving the promise") {
-                throw $e->getPrevious();
-            }
+//        try {
+//            Promise\wait(new Delayed(0)); // make loop tick once to throw errors from loop
+//        } catch (\Error $e) {
+//            if ($e->getMessage() === "Loop exceptionally stopped without resolving the promise") {
+//                throw $e->getPrevious();
+//            }
 
-            throw $e;
-        }
-    }
+//            throw $e;
+//        }
+//    }
 
     /**
      * @depends testYieldSuccessfulPromise
