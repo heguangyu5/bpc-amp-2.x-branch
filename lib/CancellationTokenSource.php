@@ -5,6 +5,93 @@ namespace Amp;
 use React\Promise\PromiseInterface as ReactPromise;
 use function Amp\Promise\rethrow;
 
+final class CancellationTokenSourceConstructInternalToken implements CancellationToken {
+    /** @var string */
+    private $nextId = "a";
+
+    /** @var callable[] */
+    private $callbacks = [];
+
+    /** @var \Throwable|null */
+    private $exception;
+
+    /**
+     * @param mixed $onCancel
+     * @param-out callable $onCancel
+     */
+    public function __construct(&$onCancel)
+    {
+        /** @psalm-suppress MissingClosureReturnType We still support PHP 7.0 */
+        $onCancel = function (\Throwable $exception) {
+            $this->exception = $exception;
+
+            $callbacks = $this->callbacks;
+            $this->callbacks = [];
+
+            foreach ($callbacks as $callback) {
+                $this->invokeCallback($callback);
+            }
+        };
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return void
+     */
+    private function invokeCallback(callable $callback)
+    {
+        // No type declaration to prevent exception outside the try!
+        try {
+            /** @var mixed $result */
+            $result = $callback($this->exception);
+
+            if ($result instanceof \Generator) {
+                /** @psalm-var \Generator<mixed, Promise|ReactPromise|(Promise|ReactPromise)[], mixed, mixed> $result */
+                $result = new Coroutine($result);
+            }
+
+            if ($result instanceof Promise || $result instanceof ReactPromise) {
+                rethrow($result);
+            }
+        } catch (\Throwable $exception) {
+            Loop::defer(static function () use ($exception) {
+                throw $exception;
+            });
+        }
+    }
+
+    public function subscribe(callable $callback): string
+    {
+        $id = $this->nextId++;
+
+        if ($this->exception) {
+            $this->invokeCallback($callback);
+        } else {
+            $this->callbacks[$id] = $callback;
+        }
+
+        return $id;
+    }
+
+    public function unsubscribe(string $id)
+    {
+        unset($this->callbacks[$id]);
+    }
+
+    public function isRequested(): bool
+    {
+        return isset($this->exception);
+    }
+
+    public function throwIfRequested()
+    {
+        if (isset($this->exception)) {
+            throw $this->exception;
+        }
+    }
+}
+
 /**
  * A cancellation token source provides a mechanism to cancel operations.
  *
@@ -50,92 +137,7 @@ final class CancellationTokenSource
     {
         $onCancel = null;
 
-        $this->token = new class($onCancel) implements CancellationToken {
-            /** @var string */
-            private $nextId = "a";
-
-            /** @var callable[] */
-            private $callbacks = [];
-
-            /** @var \Throwable|null */
-            private $exception;
-
-            /**
-             * @param mixed $onCancel
-             * @param-out callable $onCancel
-             */
-            public function __construct(&$onCancel)
-            {
-                /** @psalm-suppress MissingClosureReturnType We still support PHP 7.0 */
-                $onCancel = function (\Throwable $exception) {
-                    $this->exception = $exception;
-
-                    $callbacks = $this->callbacks;
-                    $this->callbacks = [];
-
-                    foreach ($callbacks as $callback) {
-                        $this->invokeCallback($callback);
-                    }
-                };
-            }
-
-            /**
-             * @param callable $callback
-             *
-             * @return void
-             */
-            private function invokeCallback(callable $callback)
-            {
-                // No type declaration to prevent exception outside the try!
-                try {
-                    /** @var mixed $result */
-                    $result = $callback($this->exception);
-
-                    if ($result instanceof \Generator) {
-                        /** @psalm-var \Generator<mixed, Promise|ReactPromise|(Promise|ReactPromise)[], mixed, mixed> $result */
-                        $result = new Coroutine($result);
-                    }
-
-                    if ($result instanceof Promise || $result instanceof ReactPromise) {
-                        rethrow($result);
-                    }
-                } catch (\Throwable $exception) {
-                    Loop::defer(static function () use ($exception) {
-                        throw $exception;
-                    });
-                }
-            }
-
-            public function subscribe(callable $callback): string
-            {
-                $id = $this->nextId++;
-
-                if ($this->exception) {
-                    $this->invokeCallback($callback);
-                } else {
-                    $this->callbacks[$id] = $callback;
-                }
-
-                return $id;
-            }
-
-            public function unsubscribe(string $id)
-            {
-                unset($this->callbacks[$id]);
-            }
-
-            public function isRequested(): bool
-            {
-                return isset($this->exception);
-            }
-
-            public function throwIfRequested()
-            {
-                if (isset($this->exception)) {
-                    throw $this->exception;
-                }
-            }
-        };
+        $this->token = new CancellationTokenSourceConstructInternalToken($onCancel);
 
         $this->onCancel = $onCancel;
     }

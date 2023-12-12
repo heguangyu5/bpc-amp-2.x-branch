@@ -2,6 +2,14 @@
 
 namespace Amp;
 
+final class DeferredConstructInternalResolver implements Promise {
+    use Internal\Placeholder {
+        resolve as public;
+        fail as public;
+        isResolved as public;
+    }
+}
+
 /**
  * Deferred is a container for a promise that is resolved using the resolve() and fail() methods of this object.
  * The contained promise may be accessed using the promise() method. This object should not be part of a public
@@ -19,13 +27,7 @@ final class Deferred
 
     public function __construct()
     {
-        $this->resolver = new class implements Promise {
-            use Internal\Placeholder {
-                resolve as public;
-                fail as public;
-                isResolved as public;
-            }
-        };
+        $this->resolver = new DeferredConstructInternalResolver;
 
         $this->promise = new Internal\PrivatePromise($this->resolver);
     }

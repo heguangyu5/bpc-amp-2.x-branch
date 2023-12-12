@@ -8,6 +8,37 @@ use Amp\Loop\InvalidWatcherError;
 use Amp\Loop\UnsupportedFeatureException;
 use Amp\Loop\Watcher;
 
+final class LoopSetInternalDriver extends Driver {
+    /**
+     * @return void
+     */
+    protected function activate(array $watchers)
+    {
+        throw new \Error("Can't activate watcher during garbage collection.");
+    }
+
+    /**
+     * @return void
+     */
+    protected function dispatch(bool $blocking)
+    {
+        throw new \Error("Can't dispatch during garbage collection.");
+    }
+
+    /**
+     * @return void
+     */
+    protected function deactivate(Watcher $watcher)
+    {
+        // do nothing
+    }
+
+    public function getHandle()
+    {
+        return null;
+    }
+}
+
 /**
  * Accessor to allow global access to the event loop.
  *
@@ -38,36 +69,7 @@ final class Loop
     public static function set(Driver $driver)
     {
         try {
-            self::$driver = new class extends Driver {
-                /**
-                 * @return void
-                 */
-                protected function activate(array $watchers)
-                {
-                    throw new \Error("Can't activate watcher during garbage collection.");
-                }
-
-                /**
-                 * @return void
-                 */
-                protected function dispatch(bool $blocking)
-                {
-                    throw new \Error("Can't dispatch during garbage collection.");
-                }
-
-                /**
-                 * @return void
-                 */
-                protected function deactivate(Watcher $watcher)
-                {
-                    // do nothing
-                }
-
-                public function getHandle()
-                {
-                    return null;
-                }
-            };
+            self::$driver = new LoopSetInternalDriver;
 
             \gc_collect_cycles();
         } finally {

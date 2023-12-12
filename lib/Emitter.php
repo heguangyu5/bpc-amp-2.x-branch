@@ -2,6 +2,14 @@
 
 namespace Amp;
 
+final class EmitterConstructInternalEmitter implements Iterator {
+    use Internal\Producer {
+        emit as public;
+        complete as public;
+        fail as public;
+    }
+}
+
 /**
  * Emitter is a container for an iterator that can emit values using the emit() method and completed using the
  * complete() and fail() methods of this object. The contained iterator may be accessed using the iterate()
@@ -20,13 +28,7 @@ final class Emitter
 
     public function __construct()
     {
-        $this->emitter = new class implements Iterator {
-            use Internal\Producer {
-                emit as public;
-                complete as public;
-                fail as public;
-            }
-        };
+        $this->emitter = new EmitterConstructInternalEmitter;
 
         $this->iterator = new Internal\PrivateIterator($this->emitter);
     }
