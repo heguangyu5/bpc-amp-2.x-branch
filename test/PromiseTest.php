@@ -58,7 +58,11 @@ class PromiseTest extends BaseTest
         self::assertInstanceOf(Promise::class, $promise);
     }
 
-    /** @dataProvider provideSuccessValues */
+    public function dataProviderTestPromiseSucceed()
+    {
+        return $this->provideSuccessValues();
+    }
+
     public function testPromiseSucceed($value): void
     {
         [$promise, $succeeder] = $this->promise();
@@ -71,7 +75,11 @@ class PromiseTest extends BaseTest
         self::assertTrue($invoked);
     }
 
-    /** @dataProvider provideSuccessValues */
+    public function dataProviderTestOnResolveOnSucceededPromise()
+    {
+        return $this->provideSuccessValues();
+    }
+
     public function testOnResolveOnSucceededPromise($value): void
     {
         [$promise, $succeeder] = $this->promise();
@@ -391,9 +399,8 @@ class PromiseTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testOnResolveWithReactPromise
-     */
+    static $dependsTestOnResolveWithReactPromiseAfterResolve = 'testOnResolveWithReactPromise';
+
     public function testOnResolveWithReactPromiseAfterResolve(): void
     {
         $this->expectException(\Exception::class);
@@ -423,9 +430,8 @@ class PromiseTest extends BaseTest
         self::assertTrue($invoked);
     }
 
-    /**
-     * @depends testOnResolveWithGenerator
-     */
+    static $dependsTestOnResolveWithGeneratorAfterResolve = 'testOnResolveWithGenerator';
+
     public function testOnResolveWithGeneratorAfterResolve(): void
     {
         $promise = new Promise;

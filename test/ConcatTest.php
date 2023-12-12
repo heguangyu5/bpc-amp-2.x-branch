@@ -9,7 +9,7 @@ use Amp\Producer;
 
 class ConcatTest extends BaseTest
 {
-    public function getArrays(): array
+    public function dataProviderTestConcat(): array
     {
         return [
             [[\range(1, 3), \range(4, 6)], \range(1, 6)],
@@ -19,8 +19,6 @@ class ConcatTest extends BaseTest
     }
 
     /**
-     * @dataProvider getArrays
-     *
      * @param array $iterators
      * @param array $expected
      */
@@ -39,9 +37,8 @@ class ConcatTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testConcat
-     */
+    static $dependsTestConcatWithFailedIterator = 'testConcat';
+
     public function testConcatWithFailedIterator(): void
     {
         Loop::run(function () {

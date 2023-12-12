@@ -8,14 +8,13 @@ use Amp\Loop;
 use Amp\Promise;
 use Amp\Success;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use React\Promise\PromiseInterface as ReactPromise;
 
 /**
  * A PHPUnit TestCase intended to help facilitate writing async tests by running each test as coroutine with Amp's
  * event loop ensuring that the test runs until completion based on your test returning either a Promise or Generator.
  */
-abstract class AsyncTestCase extends PHPUnitTestCase
+abstract class AsyncTestCase extends \PHPUnit_Framework_TestCase
 {
     use Internal\AsyncTestSetNameTrait;
     use Internal\AsyncTestSetUpTrait;

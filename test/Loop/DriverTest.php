@@ -9,7 +9,6 @@ use Amp\Loop;
 use Amp\Loop\Driver;
 use Amp\Loop\InvalidWatcherError;
 use Amp\Loop\UnsupportedFeatureException;
-use PHPUnit\Framework\TestCase;
 use React\Promise\RejectedPromise as RejectedReactPromise;
 use function Amp\getCurrentTime;
 
@@ -24,7 +23,7 @@ if (!\defined("PHP_INT_MIN")) {
     \define("PHP_INT_MIN", ~PHP_INT_MAX);
 }
 
-abstract class DriverTest extends TestCase
+abstract class DriverTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * The DriverFactory to run this test on.
@@ -371,10 +370,11 @@ abstract class DriverTest extends TestCase
         return $args;
     }
 
-    /**
-     * @requires PHP 7
-     * @dataProvider provideRegistrationArgs
-     */
+    public function dataProviderTestWeakTypes()
+    {
+        return $this->provideRegistrationArgs();
+    }
+
     public function testWeakTypes($type, $args): void
     {
         if ($type == "onSignal") {
@@ -423,7 +423,11 @@ abstract class DriverTest extends TestCase
         self::assertTrue($invoked);
     }
 
-    /** @dataProvider provideRegistrationArgs */
+    public function dataProviderTestDisableWithConsecutiveCancel()
+    {
+        return $this->provideRegistrationArgs();
+    }
+
     public function testDisableWithConsecutiveCancel($type, $args): void
     {
         if ($type === "onSignal") {
@@ -444,7 +448,11 @@ abstract class DriverTest extends TestCase
         self::assertTrue($invoked);
     }
 
-    /** @dataProvider provideRegistrationArgs */
+    public function dataProviderTestWatcherReferenceInfo()
+    {
+        return $this->provideRegistrationArgs();
+    }
+
     public function testWatcherReferenceInfo($type, $args): void
     {
         if ($type === "onSignal") {
@@ -511,7 +519,11 @@ abstract class DriverTest extends TestCase
         $loop->cancel($watcherId2);
     }
 
-    /** @dataProvider provideRegistrationArgs */
+    public function dataProviderTestWatcherRegistrationAndCancellationInfo()
+    {
+        return $this->provideRegistrationArgs();
+    }
+
     public function testWatcherRegistrationAndCancellationInfo($type, $args): void
     {
         if ($type === "onSignal") {
@@ -576,15 +588,20 @@ abstract class DriverTest extends TestCase
         self::assertSame($expected, $info[$type]);
     }
 
+
+    public function dataProviderTestNoMemoryLeak()
+    {
+        return $this->provideRegistrationArgs();
+    }
+
     /**
-     * @dataProvider provideRegistrationArgs
      * @group memoryleak
      */
     public function testNoMemoryLeak($type, $args)
     {
-        if ($this->getTestResultObject()->getCollectCodeCoverageInformation()) {
-            self::markTestSkipped("Cannot run this test with code coverage active [code coverage consumes memory which makes it impossible to rely on memory_get_usage()]");
-        }
+//        if ($this->getTestResultObject()->getCollectCodeCoverageInformation()) {
+//            self::markTestSkipped("Cannot run this test with code coverage active [code coverage consumes memory which makes it impossible to rely on memory_get_usage()]");
+//        }
 
         if (\DIRECTORY_SEPARATOR === '\\') {
             self::markTestSkipped('Skip on Windows for now, investigate');
@@ -1455,14 +1472,13 @@ abstract class DriverTest extends TestCase
         self::assertSame("1", $this->loop->getState("foo"));
     }
 
-    /** @dataProvider provideRegistryValues */
     public function testRegistryValues($val): void
     {
         $this->loop->setState("foo", $val);
         self::assertSame($val, $this->loop->getState("foo"));
     }
 
-    public function provideRegistryValues(): array
+    public function dataProviderTestRegistryValues(): array
     {
         return [
             ["string"],

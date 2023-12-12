@@ -4,9 +4,8 @@ namespace Amp\Test\Loop;
 
 use Amp\Loop\Internal\TimerQueue;
 use Amp\Loop\Watcher;
-use PHPUnit\Framework\TestCase;
 
-class TimerQueueTest extends TestCase
+class TimerQueueTest extends \PHPUnit_Framework_TestCase
 {
     public function testHeapOrder()
     {

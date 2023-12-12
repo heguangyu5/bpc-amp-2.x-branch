@@ -101,9 +101,6 @@ class IteratorFromIterableTest extends BaseTest
         });
     }
 
-    /**
-     * @dataProvider provideInvalidIteratorArguments
-     */
     public function testInvalid($arg): void
     {
         $this->expectException(\TypeError::class);
@@ -111,7 +108,7 @@ class IteratorFromIterableTest extends BaseTest
         Iterator\fromIterable($arg);
     }
 
-    public function provideInvalidIteratorArguments(): array
+    public function dataProviderTestInvalid(): array
     {
         return [
             [null],

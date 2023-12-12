@@ -7,7 +7,7 @@ namespace Amp\PHPUnit;
  *
  * @deprecated Use AsyncTestCase instead.
  */
-abstract class TestCase extends \PHPUnit\Framework\TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     const RUNTIME_PRECISION = 2; // Number of decimals to use in runtime calculations/comparisons.
 

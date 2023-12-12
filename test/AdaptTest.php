@@ -16,7 +16,7 @@ class PromiseMock
         $this->promise = $promise;
     }
 
-    public function then(callable $onFulfilled = null, callable $onRejected = null): void
+    public function then(callable $onFulfilled = null, callable $onRejected = null)
     {
         $this->promise->onResolve(function ($exception, $value) use ($onFulfilled, $onRejected) {
             if ($exception) {

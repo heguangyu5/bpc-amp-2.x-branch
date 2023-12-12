@@ -10,7 +10,7 @@ use Amp\Producer;
 
 class MergeTest extends BaseTest
 {
-    public function getArrays(): array
+    public function dataProviderTestMerge(): array
     {
         return [
             [[\range(1, 3), \range(4, 6)], [1, 4, 2, 5, 3, 6]],
@@ -20,8 +20,6 @@ class MergeTest extends BaseTest
     }
 
     /**
-     * @dataProvider getArrays
-     *
      * @param array $iterators
      * @param array $expected
      */
@@ -40,9 +38,8 @@ class MergeTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testMerge
-     */
+    static $dependsTestMergeWithDelayedEmits = 'testMerge';
+
     public function testMergeWithDelayedEmits(): void
     {
         Loop::run(function () {
@@ -71,9 +68,8 @@ class MergeTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testMerge
-     */
+    static $dependsTestMergeWithFailedIterator = 'testMerge';
+
     public function testMergeWithFailedIterator(): void
     {
         Loop::run(function () {
