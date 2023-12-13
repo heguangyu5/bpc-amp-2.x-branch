@@ -93,7 +93,11 @@ abstract class AsyncTestCase extends \PHPUnit_Framework_TestCase
     private function runAsyncTestCycle(array $args): \Generator
     {
         try {
-            yield $this->call(\Closure::fromCallable([$this, 'setUpAsync']));
+            if (defined('__BPC__')) {
+                yield $this->call(function () { $this->setUpAsync(); });
+            } else {
+                yield $this->call(\Closure::fromCallable([$this, 'setUpAsync']));
+            }
         } catch (\Throwable $exception) {
             throw new \Error(\sprintf(
                 '%s::setUpAsync() failed',
@@ -108,7 +112,11 @@ abstract class AsyncTestCase extends \PHPUnit_Framework_TestCase
         }
 
         try {
-            yield $this->call(\Closure::fromCallable([$this, 'tearDownAsync']));
+            if (defined('__BPC__')) {
+                yield $this->call(function () { $this->tearDownAsync(); });
+            } else {
+                yield $this->call(\Closure::fromCallable([$this, 'tearDownAsync']));
+            }
         } catch (\Throwable $exception) {
             throw new \Error(\sprintf(
                 '%s::tearDownAsync() failed',

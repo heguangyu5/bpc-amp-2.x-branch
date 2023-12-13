@@ -3,61 +3,61 @@
 namespace Amp;
 
 // @codeCoverageIgnoreStart
-if (\PHP_VERSION_ID < 70100) {
-    /** @psalm-suppress DuplicateClass */
-    trait CallableMaker
-    {
-        /** @var \ReflectionClass */
-        private static $__reflectionClass;
+//if (\PHP_VERSION_ID < 70100) {
+//    /** @psalm-suppress DuplicateClass */
+//    trait CallableMaker
+//    {
+//        /** @var \ReflectionClass */
+//        private static $__reflectionClass;
 
-        /** @var \ReflectionMethod[] */
-        private static $__reflectionMethods = [];
+//        /** @var \ReflectionMethod[] */
+//        private static $__reflectionMethods = [];
 
-        /**
-         * Creates a callable from a protected or private instance method that may be invoked by callers requiring a
-         * publicly invokable callback.
-         *
-         * @param string $method Instance method name.
-         *
-         * @return callable
-         *
-         * @psalm-suppress MixedInferredReturnType
-         */
-        private function callableFromInstanceMethod(string $method): callable
-        {
-            if (!isset(self::$__reflectionMethods[$method])) {
-                if (self::$__reflectionClass === null) {
-                    self::$__reflectionClass = new \ReflectionClass(self::class);
-                }
-                self::$__reflectionMethods[$method] = self::$__reflectionClass->getMethod($method);
-            }
+//        /**
+//         * Creates a callable from a protected or private instance method that may be invoked by callers requiring a
+//         * publicly invokable callback.
+//         *
+//         * @param string $method Instance method name.
+//         *
+//         * @return callable
+//         *
+//         * @psalm-suppress MixedInferredReturnType
+//         */
+//        private function callableFromInstanceMethod(string $method): callable
+//        {
+//            if (!isset(self::$__reflectionMethods[$method])) {
+//                if (self::$__reflectionClass === null) {
+//                    self::$__reflectionClass = new \ReflectionClass(self::class);
+//                }
+//                self::$__reflectionMethods[$method] = self::$__reflectionClass->getMethod($method);
+//            }
 
-            return self::$__reflectionMethods[$method]->getClosure($this);
-        }
+//            return self::$__reflectionMethods[$method]->getClosure($this);
+//        }
 
-        /**
-         * Creates a callable from a protected or private static method that may be invoked by methods requiring a
-         * publicly invokable callback.
-         *
-         * @param string $method Static method name.
-         *
-         * @return callable
-         *
-         * @psalm-suppress MixedInferredReturnType
-         */
-        private static function callableFromStaticMethod(string $method): callable
-        {
-            if (!isset(self::$__reflectionMethods[$method])) {
-                if (self::$__reflectionClass === null) {
-                    self::$__reflectionClass = new \ReflectionClass(self::class);
-                }
-                self::$__reflectionMethods[$method] = self::$__reflectionClass->getMethod($method);
-            }
+//        /**
+//         * Creates a callable from a protected or private static method that may be invoked by methods requiring a
+//         * publicly invokable callback.
+//         *
+//         * @param string $method Static method name.
+//         *
+//         * @return callable
+//         *
+//         * @psalm-suppress MixedInferredReturnType
+//         */
+//        private static function callableFromStaticMethod(string $method): callable
+//        {
+//            if (!isset(self::$__reflectionMethods[$method])) {
+//                if (self::$__reflectionClass === null) {
+//                    self::$__reflectionClass = new \ReflectionClass(self::class);
+//                }
+//                self::$__reflectionMethods[$method] = self::$__reflectionClass->getMethod($method);
+//            }
 
-            return self::$__reflectionMethods[$method]->getClosure();
-        }
-    }
-} else {
+//            return self::$__reflectionMethods[$method]->getClosure();
+//        }
+//    }
+//} else {
     /** @psalm-suppress DuplicateClass */
     trait CallableMaker
     {
@@ -66,7 +66,13 @@ if (\PHP_VERSION_ID < 70100) {
          */
         private function callableFromInstanceMethod(string $method): callable
         {
-            return \Closure::fromCallable([$this, $method]);
+            if (defined('__BPC__')) {
+                return function (...$args) {
+                    $this->$method(...$args);
+                };
+            } else {
+                return \Closure::fromCallable([$this, $method]);
+            }
         }
 
         /**
@@ -74,7 +80,13 @@ if (\PHP_VERSION_ID < 70100) {
          */
         private static function callableFromStaticMethod(string $method): callable
         {
-            return \Closure::fromCallable([self::class, $method]);
+            if (defined('__BPC__')) {
+                return function (...$args) {
+                    self::$method(...$args);
+                };
+            } else {
+                return \Closure::fromCallable([self::class, $method]);
+            }
         }
     }
-} // @codeCoverageIgnoreEnd
+//} // @codeCoverageIgnoreEnd
