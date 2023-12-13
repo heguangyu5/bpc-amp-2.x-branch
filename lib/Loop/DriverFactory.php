@@ -19,13 +19,13 @@ class DriverFactory
                 return $driver;
             }
 
-            if (UvDriver::isSupported()) {
-                return new UvDriver;
-            }
+//            if (UvDriver::isSupported()) {
+//                return new UvDriver;
+//            }
 
-            if (EvDriver::isSupported()) {
-                return new EvDriver;
-            }
+//            if (EvDriver::isSupported()) {
+//                return new EvDriver;
+//            }
 
             if (EventDriver::isSupported()) {
                 return new EventDriver;

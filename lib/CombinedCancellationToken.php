@@ -39,7 +39,9 @@ final class CombinedCancellationToken implements CancellationToken
 
     public function __destruct()
     {
-        foreach ($this->tokens as list($token, $id)) {
+        foreach ($this->tokens as $item) {
+            $token = $item[0];
+            $id = $item[1];
             /** @var CancellationToken $token */
             $token->unsubscribe($id);
         }
@@ -68,7 +70,8 @@ final class CombinedCancellationToken implements CancellationToken
     /** @inheritdoc */
     public function isRequested(): bool
     {
-        foreach ($this->tokens as list($token)) {
+        foreach ($this->tokens as $item) {
+            $token = $item[0];
             if ($token->isRequested()) {
                 return true;
             }
@@ -80,7 +83,8 @@ final class CombinedCancellationToken implements CancellationToken
     /** @inheritdoc */
     public function throwIfRequested()
     {
-        foreach ($this->tokens as list($token)) {
+        foreach ($this->tokens as $item) {
+            $token = $item[0];
             $token->throwIfRequested();
         }
     }

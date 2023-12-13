@@ -11,7 +11,7 @@ use function Amp\Promise\rethrow;
 class EventDriver extends Driver
 {
     /** @var \Event[]|null */
-    private static $activeSignals;
+    private static $activeSignals = array();
 
     /** @var \EventBase */
     private $handle;
@@ -49,9 +49,9 @@ class EventDriver extends Driver
         $this->now = \random_int(0, $this->nowOffset);
         $this->nowOffset -= $this->now;
 
-        if (self::$activeSignals === null) {
-            self::$activeSignals = &$this->signals;
-        }
+//        if (self::$activeSignals === null) {
+//            self::$activeSignals = &$this->signals;
+//        }
 
         /**
          * @param         $resource
@@ -200,7 +200,7 @@ class EventDriver extends Driver
             $event->del();
         }
 
-        self::$activeSignals = &$this->signals;
+        self::$activeSignals = $this->signals;
 
         foreach ($this->signals as $event) {
             /** @psalm-suppress TooFewArguments https://github.com/JetBrains/phpstorm-stubs/pull/763 */
@@ -214,7 +214,7 @@ class EventDriver extends Driver
                 $event->del();
             }
 
-            self::$activeSignals = &$active;
+            self::$activeSignals = $active;
 
             foreach ($active as $event) {
                 /** @psalm-suppress TooFewArguments https://github.com/JetBrains/phpstorm-stubs/pull/763 */
@@ -339,6 +339,7 @@ class EventDriver extends Driver
 
                 case Watcher::SIGNAL:
                     $this->signals[$id] = $this->events[$id];
+                    self::$activeSignals[$id] = $this->events[$id];
                 // no break
 
                 default:
@@ -361,6 +362,7 @@ class EventDriver extends Driver
 
             if ($watcher->type === Watcher::SIGNAL) {
                 unset($this->signals[$id]);
+                unset(self::$activeSignals[$id]);
             }
         }
     }

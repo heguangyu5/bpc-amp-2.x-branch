@@ -18,22 +18,22 @@ class InvalidYieldError extends \Error
             \var_export($generator->key(), true)
         );
 
-        if (!$generator->valid()) {
+//        if (!$generator->valid()) {
             parent::__construct($prefix, 0, $previous);
-            return;
-        }
+//            return;
+//        }
 
-        $reflGen = new \ReflectionGenerator($generator);
-        $exeGen = $reflGen->getExecutingGenerator();
-        if ($isSubgenerator = ($exeGen !== $generator)) {
-            $reflGen = new \ReflectionGenerator($exeGen);
-        }
+//        $reflGen = new \ReflectionGenerator($generator);
+//        $exeGen = $reflGen->getExecutingGenerator();
+//        if ($isSubgenerator = ($exeGen !== $generator)) {
+//            $reflGen = new \ReflectionGenerator($exeGen);
+//        }
 
-        parent::__construct(\sprintf(
-            "%s on line %s in %s",
-            $prefix,
-            $reflGen->getExecutingLine(),
-            $reflGen->getExecutingFile()
-        ), 0, $previous);
+//        parent::__construct(\sprintf(
+//            "%s on line %s in %s",
+//            $prefix,
+//            $reflGen->getExecutingLine(),
+//            $reflGen->getExecutingFile()
+//        ), 0, $previous);
     }
 }
