@@ -37,7 +37,7 @@ namespace Amp
     {
         /** @psalm-suppress InvalidReturnStatement */
         return static function (...$args) use ($callback): Promise {
-            return call($callback, ...$args);
+            return namespace\call($callback, ...$args);
         };
     }
 
@@ -58,7 +58,7 @@ namespace Amp
     function asyncCoroutine(callable $callback): callable
     {
         return static function (...$args) use ($callback) {
-            Promise\rethrow(call($callback, ...$args));
+            Promise\rethrow(namespace\call($callback, ...$args));
         };
     }
 
@@ -173,7 +173,7 @@ namespace Amp\Promise
     {
         if (!$promise instanceof Promise) {
             if ($promise instanceof ReactPromise) {
-                $promise = adapt($promise);
+                $promise = namespace\adapt($promise);
             } else {
                 throw createTypeError([Promise::class, ReactPromise::class], $promise);
             }
@@ -210,7 +210,7 @@ namespace Amp\Promise
     {
         if (!$promise instanceof Promise) {
             if ($promise instanceof ReactPromise) {
-                $promise = adapt($promise);
+                $promise = namespace\adapt($promise);
             } else {
                 throw createTypeError([Promise::class, ReactPromise::class], $promise);
             }
@@ -261,7 +261,7 @@ namespace Amp\Promise
     {
         if (!$promise instanceof Promise) {
             if ($promise instanceof ReactPromise) {
-                $promise = adapt($promise);
+                $promise = namespace\adapt($promise);
             } else {
                 throw createTypeError([Promise::class, ReactPromise::class], $promise);
             }
@@ -364,7 +364,7 @@ namespace Amp\Promise
      */
     function any(array $promises): Promise
     {
-        return some($promises, 0);
+        return namespace\some($promises, 0);
     }
 
     /**

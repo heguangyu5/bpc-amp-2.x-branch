@@ -8,6 +8,8 @@ use Amp\Promise;
 use Amp\Success;
 use React\Promise\PromiseInterface as ReactPromise;
 
+use function Amp\Internal\formatStacktrace;
+
 /**
  * Trait used by Iterator implementations. Do not use this trait in your code, instead compose your class from one of
  * the available classes implementing \Amp\Iterator.

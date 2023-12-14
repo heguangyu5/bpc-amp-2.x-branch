@@ -8,6 +8,8 @@ use Amp\Loop;
 use Amp\Promise;
 use React\Promise\PromiseInterface as ReactPromise;
 
+use function Amp\Internal\formatStacktrace;
+
 /**
  * Trait used by Promise implementations. Do not use this trait in your code, instead compose your class from one of
  * the available classes implementing \Amp\Promise.

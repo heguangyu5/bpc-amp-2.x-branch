@@ -166,7 +166,7 @@ class EventDriver extends Driver
     /**
      * @codeCoverageIgnore
      */
-    public function __destruct()
+    public function destruct()
     {
         // Unset here, otherwise $event->del() in the loop may fail with a warning, because __destruct order isn't defined.
         // Related https://github.com/amphp/amp/issues/159.
@@ -185,6 +185,11 @@ class EventDriver extends Driver
             $this->handle->free();
             $this->handle = null;
         }
+    }
+
+    public function __destruct()
+    {
+        $this->destruct();
     }
 
     /**

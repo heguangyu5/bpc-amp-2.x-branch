@@ -36,9 +36,17 @@ final class TimeoutCancellationToken implements CancellationToken
     /**
      * Cancels the delay watcher.
      */
+    public function destruct()
+    {
+        if ($this->watcher) {
+            Loop::cancel($this->watcher);
+            $this->watcher = null;
+        }
+    }
+
     public function __destruct()
     {
-        Loop::cancel($this->watcher);
+        $this->destruct();
     }
 
     /**

@@ -739,4 +739,7 @@ abstract class Driver
             "running" => (bool) $this->running,
         ];
     }
+
+    public function destruct()
+    {}
 }

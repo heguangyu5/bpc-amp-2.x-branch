@@ -67,8 +67,8 @@ namespace Amp;
         private function callableFromInstanceMethod(string $method): callable
         {
             if (defined('__BPC__')) {
-                return function (...$args) {
-                    $this->$method(...$args);
+                return function (...$args) use ($method) {
+                    return $this->$method(...$args);
                 };
             } else {
                 return \Closure::fromCallable([$this, $method]);
@@ -81,8 +81,8 @@ namespace Amp;
         private static function callableFromStaticMethod(string $method): callable
         {
             if (defined('__BPC__')) {
-                return function (...$args) {
-                    self::$method(...$args);
+                return function (...$args) use ($method) {
+                    return self::$method(...$args);
                 };
             } else {
                 return \Closure::fromCallable([self::class, $method]);
