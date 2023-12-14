@@ -34,9 +34,8 @@ class SuccessTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testOnResolve
-     */
+    static $dependsTestOnResolveThrowingForwardsToLoopHandlerOnSuccess = 'testOnResolve';
+
     public function testOnResolveThrowingForwardsToLoopHandlerOnSuccess(): void
     {
         Loop::run(function () use (&$invoked) {

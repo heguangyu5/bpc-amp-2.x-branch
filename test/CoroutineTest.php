@@ -50,9 +50,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($exception, $reason);
     }
 
-    /**
-     * @depends testYieldSuccessfulPromise
-     */
+    static $dependsTestYieldPendingPromise = 'testYieldSuccessfulPromise';
+
     public function testYieldPendingPromise()
     {
         $value = 1;
@@ -138,9 +137,8 @@ class CoroutineTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testYieldFailedPromise
-     */
+    static $dependsTestCatchingFailedPromiseException = 'testYieldFailedPromise';
+
     public function testCatchingFailedPromiseException()
     {
         $exception = new \Exception;
@@ -177,9 +175,8 @@ class CoroutineTest extends BaseTest
         $this->assertInstanceOf(InvalidYieldError::class, $reason);
     }
 
-    /**
-     * @depends testInvalidYield
-     */
+    static $dependsTestInvalidYieldAfterYieldPromise = 'testInvalidYield';
+
     public function testInvalidYieldAfterYieldPromise()
     {
         $generator = function () {
@@ -196,9 +193,8 @@ class CoroutineTest extends BaseTest
         $this->assertInstanceOf(InvalidYieldError::class, $reason);
     }
 
-    /**
-     * @depends testInvalidYield
-     */
+    static $dependsTestInvalidYieldCatchingThrownError = 'testInvalidYield';
+
     public function testInvalidYieldCatchingThrownError()
     {
         $value = 42;
@@ -221,9 +217,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($result, $value);
     }
 
-    /**
-     * @depends testInvalidYieldCatchingThrownError
-     */
+    static $dependsTestInvalidYieldCatchingThrownErrorAndYieldingAgain = 'testInvalidYieldCatchingThrownError';
+
     public function testInvalidYieldCatchingThrownErrorAndYieldingAgain()
     {
         $value = 42;
@@ -244,9 +239,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($result, $value);
     }
 
-    /**
-     * @depends testInvalidYieldCatchingThrownError
-     */
+    static $dependsTestInvalidYieldCatchingThrownErrorAndThrowing = 'testInvalidYieldCatchingThrownError';
+
     public function testInvalidYieldCatchingThrownErrorAndThrowing()
     {
         $exception = new \Exception;
@@ -267,9 +261,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($exception, $reason);
     }
 
-    /**
-     * @depends testInvalidYieldCatchingThrownError
-     */
+    static $dependsTestInvalidYieldWithThrowingFinallyBlock = 'testInvalidYieldCatchingThrownError';
+
     public function testInvalidYieldWithThrowingFinallyBlock()
     {
         $exception = new \Exception;
@@ -288,12 +281,16 @@ class CoroutineTest extends BaseTest
         });
 
         $this->assertSame($exception, $reason);
-        $this->assertInstanceOf(InvalidYieldError::class, $reason->getPrevious());
+        if (defined('__BPC__')) {
+            // Uncaught Exception/Error in finally override try-body Exception/Error
+            $this->assertNull($reason->getPrevious());
+        } else {
+            $this->assertInstanceOf(InvalidYieldError::class, $reason->getPrevious());
+        }
     }
 
-    /**
-     * @depends testYieldFailedPromise
-     */
+    static $dependsTestCatchingFailedPromiseExceptionWithNoFurtherYields = 'testYieldFailedPromise';
+
     public function testCatchingFailedPromiseExceptionWithNoFurtherYields()
     {
         $exception = new \Exception;
@@ -335,9 +332,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($exception, $reason);
     }
 
-    /**
-     * @depends testGeneratorThrowingExceptionFailsCoroutine
-     */
+    static $dependsTestGeneratorThrowingExceptionWithFinallyFailsCoroutine = 'testGeneratorThrowingExceptionFailsCoroutine';
+
     public function testGeneratorThrowingExceptionWithFinallyFailsCoroutine()
     {
         $exception = new \Exception;
@@ -362,10 +358,11 @@ class CoroutineTest extends BaseTest
         $this->assertTrue($invoked);
     }
 
-    /**
-     * @depends testYieldFailedPromise
-     * @depends testGeneratorThrowingExceptionWithFinallyFailsCoroutine
-     */
+    static $dependsTestGeneratorYieldingFailedPromiseWithFinallyFailsCoroutine = array(
+        'testYieldFailedPromise',
+        'testGeneratorThrowingExceptionWithFinallyFailsCoroutine'
+    );
+
     public function testGeneratorYieldingFailedPromiseWithFinallyFailsCoroutine()
     {
         $exception = new \Exception;
@@ -389,9 +386,8 @@ class CoroutineTest extends BaseTest
         $this->assertTrue($invoked);
     }
 
-    /**
-     * @depends testGeneratorThrowingExceptionFailsCoroutine
-     */
+    static $dependsTestGeneratorThrowingExceptionAfterPendingPromiseWithFinallyFailsCoroutine = 'testGeneratorThrowingExceptionFailsCoroutine';
+
     public function testGeneratorThrowingExceptionAfterPendingPromiseWithFinallyFailsCoroutine()
     {
         $exception = new \Exception;
@@ -420,10 +416,11 @@ class CoroutineTest extends BaseTest
         $this->assertSame($value, $yielded);
     }
 
-    /**
-     * @depends testYieldPendingPromise
-     * @depends testGeneratorThrowingExceptionWithFinallyFailsCoroutine
-     */
+    static $dependsTestGeneratorThrowingExceptionWithFinallyYieldingPendingPromise = array(
+        'testYieldPendingPromise',
+        'testGeneratorThrowingExceptionWithFinallyFailsCoroutine'
+    );
+
     public function testGeneratorThrowingExceptionWithFinallyYieldingPendingPromise()
     {
         $exception = new \Exception;
@@ -449,10 +446,11 @@ class CoroutineTest extends BaseTest
         $this->assertSame($exception, $reason);
     }
 
-    /**
-     * @depends testYieldPendingPromise
-     * @depends testGeneratorThrowingExceptionWithFinallyFailsCoroutine
-     */
+    static $dependsTestGeneratorThrowingExceptionWithFinallyBlockThrowing = array(
+        'testYieldPendingPromise',
+        'testGeneratorThrowingExceptionWithFinallyFailsCoroutine'
+    );
+
     public function testGeneratorThrowingExceptionWithFinallyBlockThrowing()
     {
         $exception = new \Exception;
@@ -522,9 +520,8 @@ class CoroutineTest extends BaseTest
 //        }
 //    }
 
-    /**
-     * @depends testYieldSuccessfulPromise
-     */
+    static $dependsTestYieldConsecutiveSucceeded = 'testYieldSuccessfulPromise';
+
     public function testYieldConsecutiveSucceeded()
     {
         $invoked = false;
@@ -548,9 +545,8 @@ class CoroutineTest extends BaseTest
         $this->assertTrue($invoked);
     }
 
-    /**
-     * @depends testYieldFailedPromise
-     */
+    static $dependsTestYieldConsecutiveFailed = 'testYieldFailedPromise';
+
     public function testYieldConsecutiveFailed()
     {
         $invoked = false;
@@ -577,9 +573,8 @@ class CoroutineTest extends BaseTest
         $this->assertTrue($invoked);
     }
 
-    /**
-     * @depends testYieldSuccessfulPromise
-     */
+    static $dependsTestFastInvalidGenerator = 'testYieldSuccessfulPromise';
+
     public function testFastInvalidGenerator()
     {
         $generator = function () {
@@ -607,9 +602,8 @@ class CoroutineTest extends BaseTest
         $this->assertInstanceOf(Coroutine::class, $callable());
     }
 
-    /**
-     * @depends testCoroutineFunction
-     */
+    static $dependsTestCoroutineFunctionWithCallbackReturningPromise = 'testCoroutineFunction';
+
     public function testCoroutineFunctionWithCallbackReturningPromise()
     {
         $value = 1;
@@ -632,9 +626,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testCoroutineFunction
-     */
+    static $dependsTestCoroutineFunctionWithNonGeneratorCallback = 'testCoroutineFunction';
+
     public function testCoroutineFunctionWithNonGeneratorCallback()
     {
         $value = 1;
@@ -656,9 +649,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testCoroutineFunction
-     */
+    static $dependsTestCoroutineFunctionWithThrowingCallback = 'testCoroutineFunction';
+
     public function testCoroutineFunctionWithThrowingCallback()
     {
         $exception = new \Exception;
@@ -680,9 +672,8 @@ class CoroutineTest extends BaseTest
         $this->assertNull($result);
     }
 
-    /**
-     * @depends testCoroutineFunction
-     */
+    static $dependsTestCoroutineFunctionWithSuccessReturnCallback = 'testCoroutineFunction';
+
     public function testCoroutineFunctionWithSuccessReturnCallback()
     {
         $callable = \Amp\coroutine(function () {
@@ -728,7 +719,9 @@ class CoroutineTest extends BaseTest
         $value = 1;
 
         $generator = function () use ($value) {
-            return $value;
+            if (true) { // bpc drop statements after return
+                return $value;
+            }
             yield; // Unreachable, but makes function a coroutine.
         };
 
@@ -743,9 +736,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testCoroutineResolvedWithReturn
-     */
+    static $dependsTestYieldFromGenerator = 'testCoroutineResolvedWithReturn';
+
     public function testYieldFromGenerator()
     {
         $value = 1;
@@ -769,9 +761,8 @@ class CoroutineTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testCoroutineResolvedWithReturn
-     */
+    static $dependsTestFastReturningGenerator = 'testCoroutineResolvedWithReturn';
+
     public function testFastReturningGenerator()
     {
         $value = 1;
@@ -895,7 +886,9 @@ class CoroutineTest extends BaseTest
         });
 
         $generator = function () use ($promise) {
-            return $promise;
+            if (true) { // bpc drop statements after return
+                return $promise;
+            }
             yield; // Unreachable, but makes function a generator.
         };
 
@@ -918,7 +911,9 @@ class CoroutineTest extends BaseTest
         });
 
         $generator = function () use ($promise) {
-            return $promise;
+            if (true) { // bpc drop statements after return
+                return $promise;
+            }
             yield; // Unreachable, but makes function a generator.
         };
 

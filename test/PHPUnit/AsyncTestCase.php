@@ -182,19 +182,19 @@ abstract class AsyncTestCase extends \PHPUnit_Framework_TestCase
 
             $additionalInfo = '';
 
-            if ($this->generator && $this->generator->valid()) {
-                $reflGen = new \ReflectionGenerator($this->generator);
-                $exeGen = $reflGen->getExecutingGenerator();
-                if ($isSubgenerator = ($exeGen !== $this->generator)) {
-                    $reflGen = new \ReflectionGenerator($exeGen);
-                }
+//            if ($this->generator && $this->generator->valid()) {
+//                $reflGen = new \ReflectionGenerator($this->generator);
+//                $exeGen = $reflGen->getExecutingGenerator();
+//                if ($isSubgenerator = ($exeGen !== $this->generator)) {
+//                    $reflGen = new \ReflectionGenerator($exeGen);
+//                }
 
-                $additionalInfo .= \sprintf(
-                    "\r\n\r\nTimeout reached on line %s in %s",
-                    $reflGen->getExecutingLine(),
-                    $reflGen->getExecutingFile()
-                );
-            }
+//                $additionalInfo .= \sprintf(
+//                    "\r\n\r\nTimeout reached on line %s in %s",
+//                    $reflGen->getExecutingLine(),
+//                    $reflGen->getExecutingFile()
+//                );
+//            }
 
             $loop = Loop::get();
             if ($loop instanceof Loop\TracingDriver) {

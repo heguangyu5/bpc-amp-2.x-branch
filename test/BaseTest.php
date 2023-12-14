@@ -21,14 +21,13 @@ abstract class BaseTest extends TestCase
     {
         $errors = [];
 
-        retry:
-
-        try {
-            wait(new Delayed(0));
-        } catch (\Throwable $e) {
-            $errors[] = (string) $e;
-
-            goto retry;
+        while (true) {
+            try {
+                wait(new Delayed(0));
+                break;
+            } catch (\Throwable $e) {
+                $errors[] = (string) $e;
+            }
         }
 
         if ($errors) {

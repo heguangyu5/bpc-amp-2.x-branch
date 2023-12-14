@@ -41,9 +41,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testOnResolveOnSuccess
-     */
+    static $dependsTestMultipleOnResolvesOnSuccess = 'testOnResolveOnSuccess';
+
     public function testMultipleOnResolvesOnSuccess(): void
     {
         $value = "Resolution value";
@@ -64,9 +63,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testOnResolveOnSuccess
-     */
+    static $dependsTestOnResolveAfterSuccess = 'testOnResolveOnSuccess';
+
     public function testOnResolveAfterSuccess(): void
     {
         $value = "Resolution value";
@@ -85,9 +83,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testOnResolveAfterSuccess
-     */
+    static $dependsTestMultipleOnResolveAfterSuccess = 'testOnResolveAfterSuccess';
+
     public function testMultipleOnResolveAfterSuccess(): void
     {
         $value = "Resolution value";
@@ -108,9 +105,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testOnResolveOnSuccess
-     */
+    static $dependsTestOnResolveThrowingForwardsToLoopHandlerOnSuccess = 'testOnResolveOnSuccess';
+
     public function testOnResolveThrowingForwardsToLoopHandlerOnSuccess(): void
     {
         Loop::run(function () use (&$invoked) {
@@ -134,9 +130,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame(1, $invoked);
     }
 
-    /**
-     * @depends testOnResolveAfterSuccess
-     */
+    static $dependsTestOnResolveThrowingForwardsToLoopHandlerAfterSuccess = 'testOnResolveAfterSuccess';
+
     public function testOnResolveThrowingForwardsToLoopHandlerAfterSuccess(): void
     {
         Loop::run(function () use (&$invoked) {
@@ -178,9 +173,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($exception, $result);
     }
 
-    /**
-     * @depends testOnResolveOnFail
-     */
+    static $dependsTestMultipleOnResolvesOnFail = 'testOnResolveOnFail';
+
     public function testMultipleOnResolvesOnFail(): void
     {
         $exception = new \Exception;
@@ -201,9 +195,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($exception, $result);
     }
 
-    /**
-     * @depends testOnResolveOnFail
-     */
+    static $dependsTestOnResolveAfterFail = 'testOnResolveOnFail';
+
     public function testOnResolveAfterFail(): void
     {
         $exception = new \Exception;
@@ -222,9 +215,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($exception, $result);
     }
 
-    /**
-     * @depends testOnResolveAfterFail
-     */
+    static $dependsTestMultipleOnResolvesAfterFail = 'testOnResolveAfterFail';
+
     public function testMultipleOnResolvesAfterFail(): void
     {
         $exception = new \Exception;
@@ -245,9 +237,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame($exception, $result);
     }
 
-    /**
-     * @depends testOnResolveOnSuccess
-     */
+    static $dependsTestOnResolveThrowingForwardsToLoopHandlerOnFail = 'testOnResolveOnSuccess';
+
     public function testOnResolveThrowingForwardsToLoopHandlerOnFail(): void
     {
         Loop::run(function () use (&$invoked) {
@@ -271,9 +262,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertSame(1, $invoked);
     }
 
-    /**
-     * @depends testOnResolveOnSuccess
-     */
+    static $dependsTestOnResolveThrowingForwardsToLoopHandlerAfterFail = 'testOnResolveOnSuccess';
+
     public function testOnResolveThrowingForwardsToLoopHandlerAfterFail(): void
     {
         Loop::run(function () use (&$invoked) {
@@ -362,9 +352,8 @@ class PlaceholderTraitTest extends BaseTest
         self::assertTrue($invoked);
     }
 
-    /**
-     * @depends testOnResolveWithGenerator
-     */
+    static $dependsTestOnResolveWithGeneratorAfterResolve = 'testOnResolveWithGenerator';
+
     public function testOnResolveWithGeneratorAfterResolve(): void
     {
         $this->placeholder->resolve(1);

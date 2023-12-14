@@ -81,9 +81,8 @@ class AnyTest extends BaseTest
         self::assertEquals([[], [1, 2, 3]], $result);
     }
 
-    /**
-     * @depends testMixedPromisesArray
-     */
+    static $dependsTestArrayKeysPreserved = 'testMixedPromisesArray';
+
     public function testArrayKeysPreserved(): void
     {
         $exception = new \Exception;

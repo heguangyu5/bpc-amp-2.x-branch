@@ -1,3 +1,23 @@
+# BPC Notes 1: How to make?
+
+```shell
+cd lib/
+make libamp.so && sudo make install-libamp
+sudo ldconfig
+```
+
+# BPC Notes 2: How to run test?
+
+```
+cd test/
+ulimit -n 4096
+phpunit-bpc --bootstrap=autoload.php --bpc=. .
+make
+./test --bootstrap=autoload.php
+```
+
+
+
 <a href="https://amphp.org/">
   <img src="https://github.com/amphp/logo/blob/master/repos/amp-logo-with-margin.png?raw=true" width="250" align="right" alt="Amp Logo">
 </a>

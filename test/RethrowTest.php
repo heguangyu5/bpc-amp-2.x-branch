@@ -27,9 +27,8 @@ class RethrowTest extends BaseTest
         $this->fail('Failed promise reason should be thrown from loop');
     }
 
-    /**
-     * @depends testRethrow
-     */
+    static $dependsTestReactPromise = 'testRethrow';
+
     public function testReactPromise()
     {
         $exception = new \Exception;

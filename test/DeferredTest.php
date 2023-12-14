@@ -21,9 +21,8 @@ class DeferredTest extends BaseTest
         $this->assertInstanceOf(Promise::class, $promise);
     }
 
-    /**
-     * @depends testGetPromise
-     */
+    static $dependsTestResolve = 'testGetPromise';
+
     public function testResolve()
     {
         $value = "Resolution value";
@@ -44,9 +43,8 @@ class DeferredTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testGetPromise
-     */
+    static $dependsTestFail = 'testGetPromise';
+
     public function testFail()
     {
         $exception = new \Exception;

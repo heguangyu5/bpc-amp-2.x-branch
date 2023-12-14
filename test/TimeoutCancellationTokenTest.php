@@ -26,6 +26,11 @@ class TimeoutCancellationTokenTest extends BaseTest
                 $this->assertInstanceOf(TimeoutException::class, $exception->getPrevious());
 
                 $message = $exception->getPrevious()->getMessage();
+                if (defined('__BPC__')) {
+                    $path = '/tmp/TimeoutCancellationTokenTest.message';
+                    file_put_contents($path, $message);
+                    $message = shell_exec("bpc-md5-reverse bpc-test/md5.map < $path");
+                }
                 $this->assertStringContainsString('TimeoutCancellationToken was created here', $message);
                 $this->assertStringContainsString('TimeoutCancellationTokenTest.php:' . $line, $message);
             }
@@ -37,6 +42,7 @@ class TimeoutCancellationTokenTest extends BaseTest
         Loop::run(function () {
             $token = new TimeoutCancellationToken(1);
             $this->assertSame(1, Loop::getInfo()["delay"]["enabled"]);
+            $token->destruct();
             unset($token);
             $this->assertSame(0, Loop::getInfo()["delay"]["enabled"]);
         });

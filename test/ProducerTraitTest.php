@@ -43,9 +43,8 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitSuccessfulPromise = 'testEmit';
+
     public function testEmitSuccessfulPromise(): void
     {
         Loop::run(function () {
@@ -61,9 +60,8 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitFailedPromise = 'testEmit';
+
     public function testEmitFailedPromise(): void
     {
         Loop::run(function () {
@@ -83,9 +81,8 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitPendingPromise = 'testEmit';
+
     public function testEmitPendingPromise(): void
     {
         Loop::run(function () {
@@ -101,9 +98,8 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitSuccessfulReactPromise = 'testEmit';
+
     public function testEmitSuccessfulReactPromise(): void
     {
         Loop::run(function () {
@@ -117,9 +113,8 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitPendingPromiseThenNonPromise = 'testEmit';
+
     public function testEmitPendingPromiseThenNonPromise(): void
     {
         Loop::run(function () {
@@ -139,9 +134,9 @@ class ProducerTraitTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+
+    static $dependsTestEmitAfterComplete = 'testEmit';
+
     public function testEmitAfterComplete(): void
     {
         $this->producer->complete();
@@ -161,9 +156,8 @@ class ProducerTraitTest extends BaseTest
         $this->producer->getCurrent();
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitPendingPromiseThenComplete = 'testEmit';
+
     public function testEmitPendingPromiseThenComplete(): void
     {
         $invoked = false;
@@ -187,9 +181,8 @@ class ProducerTraitTest extends BaseTest
         throw $reason;
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitPendingPromiseThenFail = 'testEmit';
+
     public function testEmitPendingPromiseThenFail(): void
     {
         $invoked = false;

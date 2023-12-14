@@ -40,9 +40,8 @@ class WaitTest extends BaseTest
         $this->fail('Rejection exception should be thrown from wait().');
     }
 
-    /**
-     * @depends testWaitOnSuccessfulPromise
-     */
+    static $dependsTestWaitOnPendingPromise = 'testWaitOnSuccessfulPromise';
+
     public function testWaitOnPendingPromise()
     {
         Loop::run(function () {
@@ -76,9 +75,8 @@ class WaitTest extends BaseTest
         Promise\wait((new Deferred)->promise());
     }
 
-    /**
-     * @depends testWaitOnSuccessfulPromise
-     */
+    static $dependsTestReactPromise = 'testWaitOnSuccessfulPromise';
+
     public function testReactPromise()
     {
         $value = 1;

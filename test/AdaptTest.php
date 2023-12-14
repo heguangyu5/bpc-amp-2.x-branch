@@ -57,9 +57,8 @@ class AdaptTest extends BaseTest
         self::assertInstanceOf(Promise::class, $promise);
     }
 
-    /**
-     * @depends testThenCalled
-     */
+    static $dependsTestPromiseFulfilled = 'testThenCalled';
+
     public function testPromiseFulfilled(): void
     {
         $value = 1;
@@ -75,9 +74,8 @@ class AdaptTest extends BaseTest
         self::assertSame($value, $result);
     }
 
-    /**
-     * @depends testThenCalled
-     */
+    static $dependsTestPromiseRejected = 'testThenCalled';
+
     public function testPromiseRejected(): void
     {
         $exception = new \Exception;

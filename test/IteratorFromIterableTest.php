@@ -135,9 +135,8 @@ class IteratorFromIterableTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testInterval
-     */
+    static $dependsTestSlowConsumer = 'testInterval';
+
     public function testSlowConsumer(): void
     {
         $count = 5;

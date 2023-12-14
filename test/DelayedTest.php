@@ -54,9 +54,8 @@ class DelayedTest extends BaseTest
         wait($promise);
     }
 
-    /**
-     * @depends testUnreference
-     */
+    static $dependsTestReference = 'testUnreference';
+
     public function testReference()
     {
         $time = 100;

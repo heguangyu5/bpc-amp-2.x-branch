@@ -52,9 +52,8 @@ class MapTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testValuesEmitted
-     */
+    static $dependsTestOnNextCallbackThrows = 'testValuesEmitted';
+
     public function testOnNextCallbackThrows()
     {
         Loop::run(function () {

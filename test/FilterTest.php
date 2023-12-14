@@ -52,9 +52,8 @@ class FilterTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testValuesEmitted
-     */
+    static $dependsTestCallbackThrows = 'testValuesEmitted';
+
     public function testCallbackThrows()
     {
         Loop::run(function () {

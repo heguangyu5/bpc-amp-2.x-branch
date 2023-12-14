@@ -54,7 +54,7 @@ class PromiseTest extends BaseTest
 
     public function testPromiseImplementsPromise(): void
     {
-        [$promise] = $this->promise();
+        list($promise) = $this->promise();
         self::assertInstanceOf(Promise::class, $promise);
     }
 
@@ -65,7 +65,7 @@ class PromiseTest extends BaseTest
 
     public function testPromiseSucceed($value): void
     {
-        [$promise, $succeeder] = $this->promise();
+        list($promise, $succeeder) = $this->promise();
         $promise->onResolve(function ($e, $v) use (&$invoked, $value) {
             $this->assertNull($e);
             $this->assertSame($value, $v);
@@ -82,7 +82,7 @@ class PromiseTest extends BaseTest
 
     public function testOnResolveOnSucceededPromise($value): void
     {
-        [$promise, $succeeder] = $this->promise();
+        list($promise, $succeeder) = $this->promise();
         $succeeder($value);
         $promise->onResolve(function ($e, $v) use (&$invoked, $value) {
             $this->assertNull($e);
@@ -94,7 +94,7 @@ class PromiseTest extends BaseTest
 
     public function testSuccessAllOnResolvesExecuted(): void
     {
-        [$promise, $succeeder] = $this->promise();
+        list($promise, $succeeder) = $this->promise();
         $invoked = 0;
 
         $promise->onResolve(function ($e, $v) use (&$invoked) {
@@ -126,7 +126,7 @@ class PromiseTest extends BaseTest
 
     public function testPromiseExceptionFailure(): void
     {
-        [$promise, , $failer] = $this->promise();
+        list($promise, , $failer) = $this->promise();
         $promise->onResolve(function ($e) use (&$invoked) {
             $this->assertSame(\get_class($e), "RuntimeException");
             $invoked = true;
@@ -137,7 +137,7 @@ class PromiseTest extends BaseTest
 
     public function testOnResolveOnExceptionFailedPromise(): void
     {
-        [$promise, , $failer] = $this->promise();
+        list($promise, , $failer) = $this->promise();
         $failer(new \RuntimeException);
         $promise->onResolve(function ($e) use (&$invoked) {
             $this->assertSame(\get_class($e), "RuntimeException");
@@ -148,7 +148,7 @@ class PromiseTest extends BaseTest
 
     public function testFailureAllOnResolvesExecuted(): void
     {
-        [$promise, , $failer] = $this->promise();
+        list($promise, , $failer) = $this->promise();
         $invoked = 0;
 
         $promise->onResolve(function ($e) use (&$invoked) {
@@ -180,7 +180,7 @@ class PromiseTest extends BaseTest
             self::markTestSkipped("Error only exists on PHP 7+");
         }
 
-        [$promise, , $failer] = $this->promise();
+        list($promise, , $failer) = $this->promise();
         $promise->onResolve(function ($e) use (&$invoked) {
             $this->assertSame(\get_class($e), "Error");
             $invoked = true;
@@ -195,7 +195,7 @@ class PromiseTest extends BaseTest
             self::markTestSkipped("Error only exists on PHP 7+");
         }
 
-        [$promise, , $failer] = $this->promise();
+        list($promise, , $failer) = $this->promise();
         $failer(new \Error);
         $promise->onResolve(function ($e) use (&$invoked) {
             $this->assertSame(\get_class($e), "Error");
@@ -207,10 +207,10 @@ class PromiseTest extends BaseTest
     /** Implementations MAY fail upon resolution with a Promise, but they definitely MUST NOT return a Promise */
     public function testPromiseResolutionWithPromise(): void
     {
-        [$success, $succeeder] = $this->promise();
+        list($success, $succeeder) = $this->promise();
         $succeeder(true);
 
-        [$promise, $succeeder] = $this->promise();
+        list($promise, $succeeder) = $this->promise();
 
         $ex = false;
         try {
@@ -238,7 +238,7 @@ class PromiseTest extends BaseTest
                 $invoked++;
             });
 
-            [$promise, $succeeder] = $this->promise();
+            list($promise, $succeeder) = $this->promise();
             $succeeder(true);
             $promise->onResolve(function ($e, $v) use (&$invoked, $promise) {
                 $this->assertNull($e);
@@ -248,7 +248,7 @@ class PromiseTest extends BaseTest
                 throw new \Exception;
             });
 
-            [$promise, $succeeder] = $this->promise();
+            list($promise, $succeeder) = $this->promise();
             $promise->onResolve(function ($e, $v) use (&$invoked, $promise) {
                 $this->assertNull($e);
                 $this->assertTrue($v);
@@ -271,7 +271,7 @@ class PromiseTest extends BaseTest
                 $invoked++;
             });
 
-            [$promise, $succeeder] = $this->promise();
+            list($promise, $succeeder) = $this->promise();
             $promise->onResolve(function ($e, $v) use (&$invoked, $promise) {
                 $this->assertNull($e);
                 $this->assertTrue($v);
@@ -298,7 +298,7 @@ class PromiseTest extends BaseTest
                 $invoked++;
             });
 
-            [$promise, , $failer] = $this->promise();
+            list($promise, , $failer) = $this->promise();
             $exception = new \Exception;
             $failer($exception);
             $promise->onResolve(function ($e, $v) use (&$invoked, $exception) {
@@ -309,7 +309,7 @@ class PromiseTest extends BaseTest
                 throw $e;
             });
 
-            [$promise, , $failer] = $this->promise();
+            list($promise, , $failer) = $this->promise();
             $exception = new \Exception;
             $promise->onResolve(function ($e, $v) use (&$invoked, $exception) {
                 $this->assertSame($exception, $e);
@@ -330,7 +330,7 @@ class PromiseTest extends BaseTest
     public function testWeakTypes(): void
     {
         $invoked = 0;
-        [$promise, $succeeder] = $this->promise();
+        list($promise, $succeeder) = $this->promise();
 
         $expectedData = "15.24";
 

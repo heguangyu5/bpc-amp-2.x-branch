@@ -35,9 +35,8 @@ class ProducerTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitSuccessfulPromise = 'testEmit';
+
     public function testEmitSuccessfulPromise(): void
     {
         Loop::run(function () {
@@ -55,9 +54,8 @@ class ProducerTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmitSuccessfulPromise
-     */
+    static $dependsTestEmitFailedPromise = 'testEmitSuccessfulPromise';
+
     public function testEmitFailedPromise(): void
     {
         $exception = new TestException;
@@ -79,9 +77,8 @@ class ProducerTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestEmitBackPressure = 'testEmit';
+
     public function testEmitBackPressure(): void
     {
         $emits = 3;
@@ -102,9 +99,8 @@ class ProducerTest extends BaseTest
         $this->assertGreaterThan(self::TIMEOUT * ($emits - 1), $time * 1000 + 1);
     }
 
-    /**
-     * @depends testEmit
-     */
+    static $dependsTestProducerCoroutineThrows = 'testEmit';
+
     public function testProducerCoroutineThrows(): void
     {
         $exception = new TestException;

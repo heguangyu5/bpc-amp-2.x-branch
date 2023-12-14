@@ -55,9 +55,8 @@ class TimeoutWithDefaultTest extends BaseTest
         });
     }
 
-    /**
-     * @depends testSuccessfulPromise
-     */
+    static $dependsTestFastPending = 'testSuccessfulPromise';
+
     public function testFastPending()
     {
         $value = 1;
@@ -78,9 +77,8 @@ class TimeoutWithDefaultTest extends BaseTest
         $this->assertSame($value, $result);
     }
 
-    /**
-     * @depends testSuccessfulPromise
-     */
+    static $dependsTestSlowPending = 'testSuccessfulPromise';
+
     public function testSlowPending()
     {
         $expected = 2;
@@ -101,9 +99,8 @@ class TimeoutWithDefaultTest extends BaseTest
         $this->assertEquals($expected, $actual);
     }
 
-    /**
-     * @depends testSuccessfulPromise
-     */
+    static $dependsTestReactPromise = 'testSuccessfulPromise';
+
     public function testReactPromise()
     {
         Loop::run(function () {
