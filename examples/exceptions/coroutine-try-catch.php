@@ -5,7 +5,11 @@ use Amp\Deferred;
 use Amp\Loop;
 use Amp\Promise;
 
-require_once __DIR__ . "/../../vendor/autoload.php";
+if (defined('__BPC__')) {
+    require 'Amp/autoload.php';
+} else {
+    require __DIR__ . '/../../lib/autoload.php';
+}
 
 /**
  * @return Promise<string>

@@ -36,3 +36,4 @@ Loop/TracingDriver.php
 Loop/UnsupportedFeatureException.php
 Loop/Watcher.php
 Loop/Internal/TimerQueue.php
+autoload.php

@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+if (defined('__BPC__')) {
+    require 'Amp/autoload.php';
+} else {
+    require __DIR__ . '/../../lib/autoload.php';
+}
 
 use Amp\Loop;
 
